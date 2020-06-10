@@ -40,7 +40,7 @@ interface MainRouteInfo {
   ref: string
 }
 
-interface MainProps extends RouteComponentProps<MainRouteInfo>{ }
+interface MainProps extends RouteComponentProps<MainRouteInfo> {}
 const AppLayout: React.FC<MainProps> = (props) => {
   if (!localStorage.getItem('theme')) {
     localStorage.setItem('theme', 'light')
@@ -90,7 +90,11 @@ const AppLayout: React.FC<MainProps> = (props) => {
         <Layout level="2" style={styles.container}>
           {ref === undefined || ref === '404' ? null : <Spinner size="large" />}
           <Text style={styles.text} category="h1">
-            {ref !== undefined ? ref !== '404' ? 'Redirecting you...' : 'ERROR 404 - Not found' : 'Welcome!'}
+            {ref !== undefined
+              ? ref !== '404'
+                ? 'Redirecting you...'
+                : 'ERROR 404 - Not found'
+              : 'Welcome!'}
           </Text>
         </Layout>
       </ApplicationProvider>
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    marginTop: 30
+    marginTop: 30,
   },
 })
 
