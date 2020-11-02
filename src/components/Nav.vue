@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar elevate-on-scroll app>
+  <v-app-bar app>
     <v-toolbar-title>{{ appTitle }}</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn icon @click="toggleDark">
