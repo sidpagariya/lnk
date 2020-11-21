@@ -10,6 +10,27 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
   },
   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/Dashboard.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/Login.vue'),
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/Signup.vue'),
+  },
+  {
     path: '/:link',
     name: 'Shortlink',
     component: () =>
