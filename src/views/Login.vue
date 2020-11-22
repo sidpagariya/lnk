@@ -72,6 +72,7 @@ export default {
                 v-model="password"
                 label="Password"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPassword = !showPassword"
                 :type="showPassword ? 'text' : 'password'"
                 :rules="passwordRules"
                 required
@@ -85,14 +86,60 @@ export default {
               >
                 Login
               </v-btn>
+              <div class="mt-4">
+                Forgot your password?
+                <a href="#" @click="passwordResetDialog = true">Reset here</a>
+              </div>
             </v-form>
           </v-card-text>
         </v-card>
+        <v-dialog
+          width="auto "
+          :fullscreen="$vuetify.breakpoint.xsOnly"
+          v-model="passwordResetDialog"
+          scrollable
+        >
+          <v-card elevation="10" :loading="loading">
+            <v-card-title>Reset Password</v-card-title>
+            <v-card-text>
+              <v-form
+                ref="form"
+                @submit="resetPassword"
+                v-model="validPass"
+                lazy-validation
+                class="mx-0"
+              >
+                <v-text-field
+                  v-model="email1"
+                  label="Email"
+                  :rules="email1Rules"
+                  required
+                ></v-text-field>
+              </v-form>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red" text @click="passwordResetDialog = false">
+                Close
+              </v-btn>
+              <v-btn
+                :disabled="!validPass"
+                color="green"
+                text
+                @click="resetPassword()"
+              >
+                Send Link
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import { auth } from '../firebase'
+
 export default {
   data: () => ({
     loading: false,
@@ -102,6 +149,14 @@ export default {
     password: null,
     passwordRules: [v => !!v || 'Password is required'],
     showPassword: false,
+    passwordResetDialog: false,
+    validPass: false,
+    email1: null,
+    email1Rules: [
+      v => !!v || 'E-mail is required',
+      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+    ],
+    showSuccess: false,
   }),
 
   methods: {
@@ -112,15 +167,26 @@ export default {
       e.preventDefault()
       this.loading = true
       this.validate()
-      if (this.valid) {
+      if (this.valid && this.username && this.password) {
         this.$store.dispatch('login', {
           username: this.username,
           password: this.password,
         })
-        this.loading = true
-      } else {
-        this.loading = false
       }
+      this.loading = false
+    },
+    async resetPassword(e) {
+      if (e) e.preventDefault()
+      this.loading = true
+      if (this.email1) {
+        try {
+          await auth.sendPasswordResetEmail(this.email1)
+          this.showSuccess = true
+        } catch (err) {
+          alert(err)
+        }
+      }
+      this.loading = false
     },
   },
 }

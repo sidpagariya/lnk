@@ -27,7 +27,12 @@ export default new Vuex.Store({
 
       commit('setUserProfile', userProfile.data())
 
-      router.push('/dashboard')
+      if (
+        router.currentRoute.path === '/login' ||
+        router.currentRoute.path === '/signup'
+      ) {
+        router.push('/dashboard')
+      }
     },
     async signup({ dispatch }, form) {
       const { user } = await firebase.auth.createUserWithEmailAndPassword(
@@ -36,10 +41,15 @@ export default new Vuex.Store({
       )
       await firebase.usersCollection.doc(user.uid).set({
         fullname: form.fullname,
-        username: form.fullname,
+        username: form.username,
         email: form.email,
       })
       dispatch('fetchUserProfile', user)
+    },
+    async logout({ commit }) {
+      await firebase.auth.signOut()
+      commit('setUserProfile', {})
+      router.push('/login')
     },
   },
   modules: {},

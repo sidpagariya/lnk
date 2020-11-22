@@ -37,6 +37,7 @@
                 v-model="password"
                 label="Password"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showPassword = !showPassword"
                 :type="showPassword ? 'text' : 'password'"
                 :rules="passwordRules"
                 required
@@ -50,6 +51,11 @@
               >
                 Sign Up
               </v-btn>
+
+              <div class="mt-4">
+                Already have an account?
+                <router-link to="login">Login here</router-link>
+              </div>
             </v-form>
           </v-card-text>
         </v-card>
@@ -88,10 +94,8 @@ export default {
           email: this.email,
           password: this.password,
         })
-        this.loading = true
-      } else {
-        this.loading = false
       }
+      this.loading = false
     },
   },
 }
