@@ -63,7 +63,7 @@ export default {
             >
               <v-text-field
                 v-model="username"
-                label="Username"
+                label="E-mail"
                 :rules="usernameRules"
                 required
               ></v-text-field>
@@ -133,6 +133,19 @@ export default {
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-snackbar
+          v-model="showSnackbar"
+          :timeout="snackbarTimeout"
+          :color="snackbarColor"
+          elevation="24"
+        >
+          {{ snackbarText }}
+          <template v-slot:action="{ attrs }">
+            <v-btn text v-bind="attrs" @click="showSnackbar = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
       </v-col>
     </v-row>
   </v-container>
@@ -145,7 +158,10 @@ export default {
     loading: false,
     valid: false,
     username: null,
-    usernameRules: [v => !!v || 'Username is required'],
+    usernameRules: [
+      v => !!v || 'E-mail is required',
+      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+    ],
     password: null,
     passwordRules: [v => !!v || 'Password is required'],
     showPassword: false,
@@ -156,7 +172,10 @@ export default {
       v => !!v || 'E-mail is required',
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
-    showSuccess: false,
+    showSnackbar: false,
+    snackbarColor: 'red darken-1',
+    snackbarText: null,
+    snackbarTimeout: 5000,
   }),
 
   methods: {
@@ -168,23 +187,39 @@ export default {
       this.loading = true
       this.validate()
       if (this.valid && this.username && this.password) {
-        this.$store.dispatch('login', {
-          username: this.username,
-          password: this.password,
-        })
+        this.$store
+          .dispatch('login', {
+            username: this.username,
+            password: this.password,
+          })
+          .catch(err => {
+            console.log(err)
+            this.snackbarText = err.message
+            this.snackbarColor = 'red darken-1'
+            this.showSnackbar = true
+          })
+          .finally(() => {
+            this.loading = false
+          })
       }
-      this.loading = false
     },
     async resetPassword(e) {
       if (e) e.preventDefault()
       this.loading = true
       if (this.email1) {
-        try {
-          await auth.sendPasswordResetEmail(this.email1)
-          this.showSuccess = true
-        } catch (err) {
-          alert(err)
-        }
+        auth
+          .sendPasswordResetEmail(this.email1)
+          .then(() => {
+            this.snackbarText =
+              'Password reset link sent. Please check your email!'
+            this.snackbarColor = 'green darken-1'
+            this.showSnackbar = true
+          })
+          .catch(err => {
+            this.snackbarText = err.message
+            this.snackbarColor = 'red darken-1'
+            this.showSnackbar = true
+          })
       }
       this.loading = false
     },
