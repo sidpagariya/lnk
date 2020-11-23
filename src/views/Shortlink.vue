@@ -8,15 +8,11 @@
           :size="50"
           :width="5"
         />
-        <v-col class="text-center text-h4">
-          Redirecting you...
-        </v-col>
+        <v-col class="text-center text-h4"> Redirecting you... </v-col>
       </div>
       <div class="text-center" v-else>
         <v-icon size="50">mdi-robot-dead-outline</v-icon>
-        <v-col class="text-center text-h4">
-          ERROR 404 - Not found
-        </v-col>
+        <v-col class="text-center text-h4"> ERROR 404 - Not found </v-col>
       </div>
     </v-row>
   </v-container>

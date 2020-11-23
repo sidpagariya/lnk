@@ -70,9 +70,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn text @click="closePasswordResetDialog">
-                Close
-              </v-btn>
+              <v-btn text @click="closePasswordResetDialog"> Close </v-btn>
               <v-btn
                 :disabled="!validPass"
                 color="green"

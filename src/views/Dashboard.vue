@@ -14,9 +14,7 @@
           ></v-text-field>
           <v-spacer />
           <v-btn fab color="green" @click="dialog = true">
-            <v-icon>
-              mdi-plus
-            </v-icon>
+            <v-icon> mdi-plus </v-icon>
           </v-btn>
         </v-card-title>
         <v-data-table
@@ -29,9 +27,7 @@
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item)">
-              mdi-delete
-            </v-icon>
+            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
       </v-card>
@@ -72,9 +68,7 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn text @click="close">
-                Cancel
-              </v-btn>
+              <v-btn text @click="close"> Cancel </v-btn>
               <v-btn
                 color="green darken-1"
                 text
