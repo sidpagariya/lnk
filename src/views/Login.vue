@@ -1,52 +1,3 @@
-<!--template>
-  <v-container fill-height fluid>
-    <v-row justify="center" align="center">
-      <v-col class="text-center text-h4" lg="3" md="4" sm="6" cols="9">
-        <v-card elevation="10" :loading="loading">
-          <v-card-title>Login</v-card-title>
-          <v-card-text>
-            <v-row align="center" class="mx-0">
-              <v-text-field
-                v-model="email"
-                label="Username"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="password"
-                label="Password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                counter
-                required
-              ></v-text-field>
-              <v-checkbox
-                v-model="checkbox"
-                label="Do you agree?"
-                required
-              ></v-checkbox>
-              <v-btn type="submit">
-                Submit
-              </v-btn>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
-</template>
-
-<script>
-export default {
-  name: 'Login',
-  data() {
-    return {
-      loading: false,
-      email: '',
-      showPassword: false,
-    }
-  },
-}
-</script-->
 <template>
   <v-container fill-height fluid>
     <v-row justify="center" align="center">
@@ -119,7 +70,7 @@ export default {
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="red" text @click="passwordResetDialog = false">
+              <v-btn text @click="closePasswordResetDialog">
                 Close
               </v-btn>
               <v-btn
@@ -222,6 +173,10 @@ export default {
           })
       }
       this.loading = false
+    },
+    closePasswordResetDialog() {
+      this.$refs.form.resetValidation()
+      this.passwordResetDialog = false
     },
   },
 }
