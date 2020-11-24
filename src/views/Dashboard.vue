@@ -99,28 +99,26 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-snackbar
-          v-model="showSnackbar"
-          :timeout="snackbarTimeout"
-          :color="snackbarColor"
-          elevation="24"
-        >
-          {{ snackbarText }}
-          <template v-slot:action="{ attrs }">
-            <v-btn text v-bind="attrs" @click="showSnackbar = false">
-              Close
-            </v-btn>
-          </template>
-        </v-snackbar>
+        <StatusSnackbar
+          :show="showSnackbar"
+          :text="snackbarText"
+          :type="snackbarType"
+          @close="showSnackbar = false"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import StatusSnackbar from '@/components/StatusSnackbar'
+
 import { auth, db, linksCollection, usersCollection } from '../firebase'
 export default {
   name: 'Dashboard',
+  components: {
+    StatusSnackbar,
+  },
   data: () => ({
     loading: true,
     search: '',
@@ -137,7 +135,7 @@ export default {
     urlRules: [
       v => !!v || 'URL is required',
       v =>
-        /[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/.test(
+        /(http(s)?):\/\/[(www.)?a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/.test(
           v
         ) || 'URL must be valid',
     ],
@@ -153,9 +151,8 @@ export default {
       id: '',
     },
     showSnackbar: false,
-    snackbarColor: 'green darken-1',
-    snackbarText: null,
-    snackbarTimeout: 5000,
+    snackbarType: 'success',
+    snackbarText: '',
   }),
   computed: {
     formTitle() {
@@ -216,20 +213,21 @@ export default {
         .commit()
         .then(() => {
           this.snackbarText = `Successfully deleted shortlink ${this.editedItem.shortlink}!`
-          this.snackbarColor = 'green darken-1'
+          this.snackbarType = 'success'
           this.showSnackbar = true
           this.links.splice(this.editedIndex, 1)
           this.closeDelete()
         })
         .catch(err => {
           this.snackbarText = `Error deleting shortlink ${this.editedItem.shortlink}: ${err.message}`
-          this.snackbarColor = 'red darken-1'
+          this.snackbarType = 'error'
           this.showSnackbar = true
         })
     },
 
     close() {
       this.dialog = false
+      this.$refs.form.resetValidation()
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -243,7 +241,7 @@ export default {
       })
     },
 
-    save(e) {
+    async save(e) {
       if (e) e.preventDefault()
       var batch = db.batch()
       var linksRef = linksCollection.doc(this.editedItem.shortlink)
@@ -260,13 +258,10 @@ export default {
         snackbarTitle = 'updat'
         Object.assign(this.links[this.editedIndex], this.editedItem)
       } else {
-        var exists = false
-        linksRef.get().then(doc => {
-          exists = doc.exists
-        })
+        var exists = (await linksRef.get()).exists
         if (exists) {
           this.snackbarText = `Error: shortlink '${this.editedItem.shortlink} already exists'`
-          this.snackbarColor = 'red darken-1'
+          this.snackbarType = 'error'
           this.showSnackbar = true
           return
         }
@@ -282,7 +277,7 @@ export default {
         .commit()
         .then(() => {
           this.snackbarText = `Successfully ${snackbarTitle}ed link for ${this.editedItem.shortlink}!`
-          this.snackbarColor = 'green darken-1'
+          this.snackbarType = 'success'
           this.showSnackbar = true
           if (this.editedIndex === -1) {
             this.editedItem.id = usersLinksRef.id
@@ -292,7 +287,7 @@ export default {
         })
         .catch(err => {
           this.snackbarText = `Error ${snackbarTitle}ing link for ${this.editedItem.shortlink}: ${err.message}`
-          this.snackbarColor = 'red darken-1'
+          this.snackbarType = 'error'
           this.showSnackbar = true
         })
     },

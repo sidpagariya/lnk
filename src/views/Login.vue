@@ -82,27 +82,24 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-snackbar
-          v-model="showSnackbar"
-          :timeout="snackbarTimeout"
-          :color="snackbarColor"
-          elevation="24"
-        >
-          {{ snackbarText }}
-          <template v-slot:action="{ attrs }">
-            <v-btn text v-bind="attrs" @click="showSnackbar = false">
-              Close
-            </v-btn>
-          </template>
-        </v-snackbar>
+        <StatusSnackbar
+          :show="showSnackbar"
+          :text="snackbarText"
+          :type="snackbarType"
+          @close="showSnackbar = false"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
 import { auth } from '../firebase'
+import StatusSnackbar from '@/components/StatusSnackbar'
 
 export default {
+  components: {
+    StatusSnackbar,
+  },
   data: () => ({
     loading: false,
     valid: false,
@@ -122,11 +119,9 @@ export default {
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
     showSnackbar: false,
-    snackbarColor: 'red darken-1',
-    snackbarText: null,
-    snackbarTimeout: 5000,
+    snackbarType: 'error',
+    snackbarText: '',
   }),
-
   methods: {
     validate() {
       this.$refs.form.validate()
@@ -144,7 +139,7 @@ export default {
           .catch(err => {
             console.log(err)
             this.snackbarText = err.message
-            this.snackbarColor = 'red darken-1'
+            this.snackbarType = 'error'
             this.showSnackbar = true
           })
           .finally(() => {
@@ -161,12 +156,12 @@ export default {
           .then(() => {
             this.snackbarText =
               'Password reset link sent. Please check your email!'
-            this.snackbarColor = 'green darken-1'
+            this.snackbarType = 'success'
             this.showSnackbar = true
           })
           .catch(err => {
             this.snackbarText = err.message
-            this.snackbarColor = 'red darken-1'
+            this.snackbarType = 'error'
             this.showSnackbar = true
           })
       }

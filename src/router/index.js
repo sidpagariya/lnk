@@ -13,7 +13,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: () =>
-      import(/* webpackChunkName: "home" */ '../views/Dashboard.vue'),
+      import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -22,13 +22,13 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () =>
-      import(/* webpackChunkName: "home" */ '../views/Login.vue'),
+      import(/* webpackChunkName: "login" */ '../views/Login.vue'),
   },
   {
     path: '/signup',
     name: 'Signup',
     component: () =>
-      import(/* webpackChunkName: "home" */ '../views/Signup.vue'),
+      import(/* webpackChunkName: "signup" */ '../views/Signup.vue'),
   },
   {
     path: '/:link',

@@ -59,12 +59,23 @@
             </v-form>
           </v-card-text>
         </v-card>
+        <StatusSnackbar
+          :show="showSnackbar"
+          :text="snackbarText"
+          :type="snackbarType"
+          @close="showSnackbar = false"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
+import StatusSnackbar from '@/components/StatusSnackbar'
+
 export default {
+  components: {
+    StatusSnackbar,
+  },
   data: () => ({
     loading: false,
     valid: false,
@@ -77,6 +88,9 @@ export default {
     password: null,
     passwordRules: [v => !!v || 'Password is required'],
     showPassword: false,
+    showSnackbar: false,
+    snackbarType: 'success',
+    snackbarText: '',
   }),
 
   methods: {
