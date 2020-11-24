@@ -21,7 +21,7 @@ export default new Vuex.Store({
         form.password
       )
     },
-    fetchUserProfile({ commit }, user) {
+    async fetchUserProfile({ commit }, user) {
       return firebase.usersCollection
         .doc(user.uid)
         .get()
@@ -36,11 +36,11 @@ export default new Vuex.Store({
           return null
         })
     },
-    signup(_, form) {
+    async signup(_, form) {
       return firebase.auth
         .createUserWithEmailAndPassword(form.email, form.password)
-        .then(user => {
-          return firebase.usersCollection.doc(user.uid).set({
+        .then(result => {
+          return firebase.usersCollection.doc(result.user.uid).set({
             fullname: form.fullname,
             username: form.username,
             email: form.email,
