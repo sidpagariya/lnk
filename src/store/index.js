@@ -42,7 +42,7 @@ export default new Vuex.Store({
         .then(result => {
           return firebase.usersCollection.doc(result.user.uid).set({
             fullname: form.fullname,
-            username: form.username,
+            // username: form.username,
             email: form.email,
           })
         })

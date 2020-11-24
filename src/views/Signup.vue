@@ -19,12 +19,12 @@
                 required
               ></v-text-field>
 
-              <v-text-field
+              <!--v-text-field
                 v-model="username"
                 label="Username"
                 :rules="usernameRules"
                 required
-              ></v-text-field>
+              ></v-text-field-->
 
               <v-text-field
                 v-model="email"
@@ -104,7 +104,7 @@ export default {
       if (this.valid) {
         this.$store.dispatch('signup', {
           fullname: this.fullname,
-          username: this.username,
+          // username: this.username,
           email: this.email,
           password: this.password,
         })
