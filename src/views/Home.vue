@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { analytics } from '@/firebase'
+analytics.logEvent('visit_home')
 export default {
   name: 'Home',
 }

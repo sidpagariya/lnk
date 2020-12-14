@@ -120,7 +120,14 @@
 <script>
 import StatusSnackbar from '@/components/StatusSnackbar'
 
-import { auth, db, linksCollection, usersCollection } from '../firebase'
+import {
+  auth,
+  analytics,
+  db,
+  linksCollection,
+  usersCollection,
+} from '@/firebase'
+analytics.logEvent('visit_dashboard')
 export default {
   name: 'Dashboard',
   components: {

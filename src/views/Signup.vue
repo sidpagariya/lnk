@@ -70,8 +70,10 @@
   </v-container>
 </template>
 <script>
+import { analytics } from '@/firebase'
 import StatusSnackbar from '@/components/StatusSnackbar'
 
+analytics.logEvent('visit_signup')
 export default {
   components: {
     StatusSnackbar,

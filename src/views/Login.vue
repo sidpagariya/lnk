@@ -93,9 +93,10 @@
   </v-container>
 </template>
 <script>
-import { auth } from '../firebase'
+import { analytics, auth } from '@/firebase'
 import StatusSnackbar from '@/components/StatusSnackbar'
 
+analytics.logEvent('visit_login')
 export default {
   components: {
     StatusSnackbar,

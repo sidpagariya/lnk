@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { linksCollection } from '@/firebase'
+import { analytics, linksCollection } from '@/firebase'
 export default {
   name: 'Shortlink',
   methods: {
@@ -42,6 +42,10 @@ export default {
   created: async function() {
     if (this.$route.params.link !== '404') {
       this.getLinkForRef(this.$route.params.link).then(link => {
+        analytics.logEvent('shortlink_visit', {
+          shortlink: this.$route.params.link,
+          url: link,
+        })
         window.location.href = link
       })
     }
